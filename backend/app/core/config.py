@@ -67,6 +67,10 @@ class Settings(BaseSettings):
             path=self.POSTGRES_DB,
         )
 
+    def _check_default_secret(self, name: str, value: str) -> None:
+        if value == "":
+            raise ValueError(f"The secret for {name} is not set")
+
     @model_validator(mode="after")
     def _enforce_non_default_secrets(self) -> Self:
         self._check_default_secret("SECRET_KEY", self.SECRET_KEY)
